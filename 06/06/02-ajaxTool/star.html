@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+         <style>
+			table{
+				width: 700px;
+				border: 1px solid #000;
+				border-collapse: collapse;
+				text-align: center;
+			}
+			td{
+				height: 30px;
+				border: 1px solid #000;
+			}
+			tr:nth-child(odd){
+				background-color: #eee;
+			}
+        </style>
+    </head>
+    <body>
+    	<button>获取数据</button>
+    	<table>
+    		
+    	</table>
+
+    	<script src="ajax.js"></script>
+    	<script>
+    		//1、点击按钮 向服务器发送请， 获取json格式 数据
+	    	//2、拿到返回json数据，以表格展示在页面中
+
+	    	document.querySelector('button').onclick=function(){
+	    		//调用插件
+	    		// Tool.ajax('get','star.php',null,function(info){
+	    		// 	//console.log(info);
+	    		// 	// 拿到数据后进行渲染 
+	    		// 	var html='';
+	    		// 	for(var i=0;i<info.length;i++){
+	    		// 		html+='<tr>';
+	    		// 		html+='<td>'+info[i].name+'</td>';
+	    		// 		html+='<td>'+info[i].age+'</td>';
+	    		// 		html+='<td>'+info[i].sex+'</td>';
+	    		// 		html+='<td>'+info[i].photo+'</td>';
+	    		// 		html+='<td>'+info[i].album+'</td>';
+	    		// 		html+='</tr>';
+	    		// 	}	    			
+	    		// 	document.querySelector('table').innerHTML=html;
+	    		// })
+	    		// 
+				//调用插件
+	    		$.ajax({	    			
+	    			url:'star.php',
+	    			type:'get',
+	    			data:null,
+	    			callback:function(info){
+	    			//console.log(info);
+	    			// 拿到数据后进行渲染 
+	    			var html='';
+	    			for(var i=0;i<info.length;i++){
+	    				html+='<tr>';
+	    				html+='<td>'+info[i].name+'</td>';
+	    				html+='<td>'+info[i].age+'</td>';
+	    				html+='<td>'+info[i].sex+'</td>';
+	    				html+='<td>'+info[i].photo+'</td>';
+	    				html+='<td>'+info[i].album+'</td>';
+	    				html+='</tr>';
+	    			}	    			
+	    			document.querySelector('table').innerHTML=html;
+	    		}
+	    		});
+	    	}
+    	</script>
+    </body>
+</html>

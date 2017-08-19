@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+			form{
+				width: 300px;
+				margin: 100px auto;
+			}
+
+			label{
+				display: block;
+				width: 100%;
+				margin:20px 0;
+			}
+			input{
+				width: 100%;
+			}
+        </style>
+    </head>
+    <body>
+    	<form id="form">
+    		<label >
+    			用户名：<input type="text" name="userName">
+    		</label>
+    		<label >
+    			邮箱：<input type="text" name="email">
+    		</label>
+    		<label>
+    			图像：<input type="file" name="file" id="file">
+    		</label>
+			<input  class="btn"  type="button"value="提交数据">
+    	</form>
+		<div></div>
+		<img src="" >
+    	<script>
+
+    		document.querySelector('.btn').onclick=function(){
+
+    			var xhr=new XMLHttpRequest();
+
+	    		xhr.open('post','03-file.php');
+
+
+	    		var file=document.querySelector("#file");
+	    		//file.files[0]
+	    		//可以拿到文件域中的第一个文件
+	    		console.log(file.files[0]);
+	    		// 创建formData
+	    		var formData=new FormData();
+	    		// 向formData中添加文件
+	    		formData.append('upload',file.files[0]);
+
+	    		xhr.send(formData);
+
+
+	    		xhr.onreadystatechange=function(){
+	    			if(xhr.readyState==4&&xhr.status==200){
+	    				// console.log(xhr.responseText);
+	    				document.querySelector('div').innerHTML=xhr.responseText;
+
+	    				document.querySelector('img').src=xhr.responseText;
+	    			}
+	    		}
+    		}
+    		
+    	</script>
+    </body>
+</html>

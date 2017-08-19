@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">       
+    </head>
+    <body>
+    	身份证：<input type="text" value="371325197505028931"> <button>查询</button>
+    	<div class="info"></div>
+
+    	<script src="../js/jquery.min.js"></script>
+
+    	<script>
+    		$('button').click(function(){
+
+    			var num=document.querySelector('input').value;
+
+    			$.ajax({
+    				type:'get',
+    				url:'http://apis.baidu.com/apistore/idservice/id',
+    				data:{id:num},
+    				dataType:'json',
+    				beforeSend:function(xhr){
+    					//设置请求头
+    					xhr.setRequestHeader('apikey','21f068f20fd5b7ca99c8908c1ae9f2bb');
+    				},
+    				success:function(info){
+    					console.log(info);
+    					
+						// etData: Ob
+						// ject
+						// address: "山东省临沂市费县"
+						// birthday: "1975-05-02"
+						// sex: "M"
+						
+    					var html='<ul>';
+    					html+="<li>"+info.retData.address+"</li>";
+    					html+="<li>"+info.retData.birthday+"</li>";
+    					html+="<li>"+info.retData.sex+"</li>";
+    					html+="</ul>";
+
+    					document.querySelector('.info').innerHTML=html;
+    				},
+    				error:function(error){
+    					console.log(error);
+    				}
+    			});
+    		});
+    	</script>
+    </body>
+</html>

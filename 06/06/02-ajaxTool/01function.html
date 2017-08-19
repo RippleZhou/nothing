@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+    	<script>
+    		// 关于参数问题   ：参数属性 必须一一对应
+    		function say(name,age,sex,hobby){
+    			alert('我叫'+name+',年龄：'+age+',是'+sex+'的,爱好：'+hobby);
+    		}
+
+    		// say('聪聪',19,'弯','男');
+
+
+    		// say('电影','聪聪','19','弯');
+
+    		//以对象的形式传递参数， 传递参数的顺序 没有要求
+    		function hello(obj){
+    			alert('我叫'+obj.name+',年龄：'+obj.age+',是'+obj.sex+'的,爱好：'+obj.hobby);
+    		}
+
+
+    		hello({
+    			sex:'弯弯',
+    			age:18,
+    			name:'聪聪',
+    			hobby:'男'
+    		});
+    	</script>
+    </body>
+</html>

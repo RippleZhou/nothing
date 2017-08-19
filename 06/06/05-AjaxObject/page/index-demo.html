@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+    <style>
+        body {
+            font-family: Microsoft YaHei
+        }
+        .table-bordered > thead > tr > th {
+            border-bottom-width: 1px;
+            background: #f5f5f5;
+            text-align: center
+        }
+        .pagination {
+            margin: 0
+        }
+        .pagination>li>a{
+            padding: 2px 15px;
+        }
+        .disabled{
+            cursor: not-allowed;
+        }
+        .panel-body{
+            position: relative;
+        }
+        .loading{
+            width: 80px;
+            height: 30px;
+            border-radius: 5px;
+            background: url("images/loading.gif") center center no-repeat;
+            background-color: rgba(0,0,0,0.5);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            display: none;
+        }
+        input{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>后台管理系统
+            <small>用户管理</small>
+        </h1>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">用户管理</div>
+        <div class="panel-body">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th width="15%">用户名</th>
+                    <th width="15%">密码</th>
+                    <th width="20%">教师姓名</th>
+                    <th width="25%">所属学院</th>
+                    <th width="10%">年龄</th>
+                    <th width="10%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <nav>
+                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit">添加</button>
+                <ul class="pagination pull-right">
+                    <li><a href="javascript:;"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                    <li><a href="javascript:;"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                </ul>
+            </nav>
+            <div class="loading"></div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">信息录入</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="javascript:;" id="form" autocomplete="off">
+                        <input name="username" maxlength="20" class="form-control" placeholder="请输入用户名" type="text" />
+                        <input name="password" maxlength="20" class="form-control" placeholder="请输入密码" type="password"/>
+                        <input name="name" maxlength="100" class="form-control" placeholder="请输入姓名" type="text"/>
+                        <input name="school" maxlength="100" class="form-control" placeholder="请输入学校" type="text"/>
+                        <input name="age" class="form-control" placeholder="请输入年龄" type="text"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="page">
+    <li>
+        <a href="javascript:;" class="{{model.pageNum > 1?'':'disabled'}}" data-pageNum="{{model.pageNum-1}}">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+    </li>
+    <li>
+        <a href="javascript:;" class="{{model.pageNum < model.pageCount?'':'disabled'}}"  data-pageNum="{{model.pageNum+1}}">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </li>
+</script>
+<script type="text/html" id="list">
+    {{each model.list}}
+    <tr class="text-center" >
+        <td>{{(model.pageNum -1)*model.pageSize + $index + 1}}</td>
+        <td>{{$value.username}}</td>
+        <td>{{$value.password}}</td>
+        <td>{{$value.name}}</td>
+        <td>{{$value.school}}</td>
+        <td>{{$value.age}}</td>
+        <td>
+            <a class="delete" data-id="{{$value.id}}" href="javascript:;" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+    </tr>
+    {{/each}}
+</script>
+<script src="js/jquery.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+    $(function () {
+
+        var $pageBox = $('.pagination');
+        var $loading = $('.loading');
+
+        var render = function (pageNum) {
+            $.ajax({
+                type: 'get',
+                url: '../api/findUsers.php',
+                data: {
+                    pageNum: pageNum || 1,
+                    pageSize: 10
+                },
+                dataType: 'json',
+                beforeSend:function(){
+                    $loading.show();
+                },
+                success: function (data) {
+                    $loading.hide();
+                    $('tbody').html(template('list', {model: data}));
+                    $('.pagination').html(template('page', {
+                        model: {
+                            'pageNum':data.pageNum,
+                            'pageCount':Math.ceil(data.total/data.pageSize)
+                        }
+                    }));
+                    window.pageNow = data.pageNum;
+                }
+            });
+        };
+
+        render();
+
+        $pageBox.on('click', 'a', function () {
+            if($(this).hasClass('disabled')||$('.loading:visible').length) return false;
+            render($(this).attr('data-pageNum'));
+        });
+
+        $('#save').on('click',function(){
+            $.ajax({
+                type:'post',
+                url:'../api/saveUser.php',
+                data: $('#form').serialize(),
+                dataType: 'json',
+                success:function(data){
+                    if(data.status == 'ok'){
+                        $('#form')[0].reset();
+                        $('#edit').modal('hide');
+                        render();
+                    }
+                }
+            });
+        });
+
+        $('body').on('click','.delete',function(){
+            if(window.confirm('你确定要删除吗？')){
+            	alert($(this).attr('data-id'));
+                $.ajax({
+                    type:'post',
+                    url:'../api/removeUser.php',
+                    data:{id:$(this).attr('data-id')},
+                    dataType: 'json',
+                    success:function(data){
+                    	alert(2);
+                        if(data.status == 'ok'){
+                            render(window.pageNow||1);
+                        }
+                    },
+                    error:function(error){
+                    	console.log(error);
+                    }
+                });
+                return true;
+            }else{
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+			form{
+				width: 300px;
+				margin: 100px auto;
+			}
+
+			label{
+				display: block;
+				width: 100%;
+				margin:20px 0;
+			}
+			input{
+				width: 100%;
+			}
+
+			.progress{
+				width: 600px;
+				margin:0 auto;
+				height: 30px;
+				background-color: pink;
+				border: 1px solid #000;
+			}
+
+			.curr-progress{
+				height: 100%;
+				background-color: green;
+				width: 1%;
+			}
+        </style>
+    </head>
+    <body>
+    	<form id="form">
+    		<label >
+    			用户名：<input type="text" name="userName">
+    		</label>
+    		<label >
+    			邮箱：<input type="text" name="email">
+    		</label>
+    		<label>
+    			图像：<input type="file" name="file" id="file">
+    		</label>
+			<input  class="btn"  type="button"value="提交数据">
+    	</form>
+		<div class="progress">
+			<div class="curr-progress"></div>
+		</div>
+	
+    	<script>
+
+    		document.querySelector('.btn').onclick=function(){
+
+    			var xhr=new XMLHttpRequest();
+
+	    		xhr.open('post','04-progress.php');
+
+	    		var file=document.querySelector('#file');
+	    		var formData=new FormData();
+
+	    		formData.append('upload',file.files[0]);
+
+
+	    		//绑定上传进度的事件
+	    		xhr.upload.onprogress=function(e){
+	    			
+	    			//当前进度/总进度
+	    			var  value=e.loaded/e.total;  //0.5  50%
+
+	    			document.querySelector('.curr-progress').style.width=value*100+'%';
+
+	    		}
+	    	
+
+	    		xhr.send(formData);
+
+
+	    		xhr.onreadystatechange=function(){
+	    			if(xhr.readyState==4&&xhr.status==200){
+	    				// console.log(xhr.responseText);
+	    				
+	    			}
+	    		}
+    		}
+    		
+    	</script>
+    </body>
+</html>

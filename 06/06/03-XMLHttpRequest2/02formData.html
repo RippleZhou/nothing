@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+			form{
+				width: 300px;
+				margin: 100px auto;
+			}
+
+			label{
+				display: block;
+				width: 100%;
+				margin:20px 0;
+			}
+			input{
+				width: 100%;
+			}
+        </style>
+    </head>
+    <body>
+    	<form id="form">
+    		<label >
+    			用户名：<input type="text" name="userName">
+    		</label>
+    		<label >
+    			邮箱：<input type="text" name="email">
+    		</label>
+			<input  class="btn"  type="button"value="提交数据">
+    	</form>
+
+
+    	<script>
+
+    		document.querySelector('.btn').onclick=function(){
+    			var xhr=new XMLHttpRequest();
+
+	    		xhr.open('post','02fromData.php');
+
+	    		//先获取表单
+
+	    		var form=document.querySelector('#form');
+
+	    		var formData=new FormData(form);
+
+
+	    		//手动下formData中加数据
+	    		formData.append('ak','12312312323');
+	    		formData.append('cc','abc');
+
+	    		xhr.send(formData);
+
+
+	    		xhr.onreadystatechange=function(){
+	    			if(xhr.readyState==4&&xhr.status==200){
+	    				console.log(xhr.responseText);
+	    			}
+	    		}
+    		}
+    		
+    	</script>
+    </body>
+</html>
